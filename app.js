@@ -20,8 +20,6 @@ app.use('/about', aboutRoute);
 app.use((req, res, next) => {
     const err = new Error('Sorry, the requested resource was not found.');
     err.status = 404;
-    console.log(err.message);
-    console.log(err.status);
     next(err);
 });
   
