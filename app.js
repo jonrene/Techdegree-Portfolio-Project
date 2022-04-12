@@ -16,4 +16,19 @@ const aboutRoute = require('./routes/about.js');
 app.use(mainRoute);
 app.use('/about', aboutRoute);
 
+app.use((req, res, next) => {
+    const err = new Error('Sorry, the requested resource was not found.');
+    err.status = 404;
+    console.log(err.message);
+    console.log(err.status);
+    next(err);
+  });
+  
+app.use((err, req, res, next) => {
+    res.render('error.pug', {
+      errMessage: err.message,
+      errStatus: err.status
+    });
+});
+
 app.listen(3000);
