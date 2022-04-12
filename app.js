@@ -9,12 +9,13 @@ app.set('view engine', 'pug');
 app.use('/static', express.static('public'));
 
 // imports routes to be used for project
-const homeRoute = require('./routes/index.js');
+const mainRoute = require('./routes/index.js');
+const aboutRoute = require('./routes/about.js');
 
-// Adds middleware to application for index/home route.
-app.use(homeRoute);
 
-// error handler
+app.use(mainRoute);
+app.use('/about', aboutRoute);
+
 app.use((req, res, next) => {
     const err = new Error('Sorry, the requested resource was not found.');
     err.status = 404;
@@ -23,16 +24,11 @@ app.use((req, res, next) => {
     next(err);
   });
   
-// global error handler
 app.use((err, req, res, next) => {
-  if(err.status == 404){
-    const errMessage = "Sorry, the requested resource was not found.";
-    const errStatus = 404;
-    res.render("error.pug", {errMessage: errMessage, errStatus: errStatus});
-  }else{ 
-    res.render("error.pug", {errMessage: "OOPS! Something went wrong.", errStatus: 500})
-  }
+    res.render('error.pug', {
+      errMessage: err.message,
+      errStatus: err.status
+    });
 });
 
-// starts application to listen on port 3000
 app.listen(3000);
